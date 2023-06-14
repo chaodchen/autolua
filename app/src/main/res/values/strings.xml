@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">compose1</string>
+    <string name="accessibility_service_label">
+        测试自动化
+    </string>
+    <string name="accessibility_service_desc">
+        无障碍描述
+    </string>
+</resources>
