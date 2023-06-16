@@ -17,7 +17,6 @@ object App {
             Log.d(tag, "应用不存在")
         }
     }
-
 }
 
 

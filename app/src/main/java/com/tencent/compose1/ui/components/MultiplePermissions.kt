@@ -34,7 +34,6 @@ fun MultiplePermissions() {
         openDialog.value = false
     } else {
         Log.d(tag, "开始申请权限")
-
         if (openDialog.value) {
             AlertDialog(onDismissRequest = { /*TODO*/ },
                 title = { Text(text = "温馨提示") }, text = { Text(text = "该软件需要一些权限。") },

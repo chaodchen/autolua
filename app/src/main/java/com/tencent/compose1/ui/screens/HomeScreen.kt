@@ -1,7 +1,10 @@
 package com.tencent.compose1.ui.screens
 
 import android.annotation.SuppressLint
+import android.net.Uri
 import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -18,6 +21,10 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -25,10 +32,13 @@ import com.tencent.compose1.apis.accessibility.MyAccessibilityService
 import com.tencent.compose1.apis.autolua.MyAutoLua
 import com.tencent.compose1.appContext
 import com.tencent.compose1.tool.FileTool
+import com.tencent.compose1.tool.isFloatingServiceON
 import com.tencent.compose1.tool.isServiceON
 import com.tencent.compose1.tool.requestAccessibilityPermission
+import com.tencent.compose1.tool.requestFloatingServicePermission
 import com.tencent.compose1.ui.components.FileInfoItem
 import com.tencent.compose1.ui.components.MultiplePermissions
+import com.tencent.compose1.ui.components.myFloatingWindow
 
 import com.tencent.compose1.viewmodel.HomeViewModel
 
@@ -61,27 +71,32 @@ fun HomeScreen(homeViewModel: HomeViewModel = viewModel(),
         Column(modifier = Modifier
             .padding(it)
             .fillMaxSize()) {
-            MultiplePermissions()
-
-            if (isServiceON(appContext, MyAccessibilityService::class.java.name)) {
+//            MultiplePermissions()
+            if (!isServiceON(appContext)) {
+                TextButton(onClick = {
+                    requestAccessibilityPermission(appContext)
+                }) {
+                    Text(text = "点击授予无障碍权限")
+                }
+            } else if (!isFloatingServiceON(appContext)) {
+                TextButton(onClick = {
+                    requestFloatingServicePermission(appContext)
+                }) {
+                    Text(text = "点击授予悬浮窗权限")
+                }
+            } else {
                 LazyColumn() {
                     items(homeViewModel.fileList) { item ->
                         FileInfoItem(fileInfo = item, onItemClick = { file ->
-                            Log.d(tag,  "fileName: ${file.name}")
-                            var fileContent = FileTool.readFromAssets(appContext,
+                            myFloatingWindow(onClick = {
+                                Log.d(tag,  "fileName: ${file.name}")
+                                var fileContent = FileTool.readFromAssets(appContext,
                                 "scripts/${file.name}")
                             var ret = lua.LdoString(fileContent)
                             Log.d(tag, "luaResult: $ret")
+                            })
                         })
                     }
-                }
-            } else {
-                TextButton(onClick = {
-                    requestAccessibilityPermission(appContext)
-
-                }) {
-                    Text(text = "点击授予无障碍权限")
-
                 }
             }
         }

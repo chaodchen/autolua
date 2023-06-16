@@ -1,38 +1,42 @@
 package com.tencent.compose1.ui.components
 
 
+import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.PixelFormat
+import android.os.Build
+import android.view.Gravity
+import android.view.LayoutInflater
+import android.view.View
 import android.view.WindowManager
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.runtime.*
+import android.widget.Button
+import android.widget.ImageButton
+import com.tencent.compose1.R
+import com.tencent.compose1.appContext
 
 
-
-
-
-
-@Composable
-fun MyScreenContent() {
-    val context = LocalContext.current
-    val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
-    val layoutParams = remember { WindowManager.LayoutParams().apply {
-        type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
+@SuppressLint("MissingInflatedId")
+fun myFloatingWindow(onClick: View.OnClickListener) {
+    val params = WindowManager.LayoutParams().apply {
+        width = WindowManager.LayoutParams.WRAP_CONTENT
+        height = WindowManager.LayoutParams.WRAP_CONTENT
+        type = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
+        } else {
+            WindowManager.LayoutParams.TYPE_PHONE
+        }
         flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
-        width = 300
-        height = 300
-        x = 100
-        y = 100
-    } }
+        format = PixelFormat.TRANSLUCENT
+        gravity = Gravity.LEFT or Gravity.CENTER_VERTICAL
+        x = 0
+        y = 500
+    }
 
+
+    val inflater = appContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+    val view = inflater.inflate(R.layout.floating_window, null)
+
+    val windowManager = appContext.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+    windowManager.addView(view, params)
+    view.findViewById<ImageButton>(R.id.play).setOnClickListener(onClick)
 }
-
-
-//fun requestOverlayPermission(context: Context) {
-//    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//        if (!Settings.canDrawOverlays(context)) {
-//            val intent = Settings.ACTION_MANAGE_OVERLAY_PERMISSION
-//            context.startActivity(intent)
-//        }
-//    }
-//}
