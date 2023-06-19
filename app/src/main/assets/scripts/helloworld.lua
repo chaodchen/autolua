@@ -11,6 +11,12 @@ function main()
     Log:d("lua", "welcome to AutoLua.")
     Log:d("lua","version" .. version)
     Log:d("lua","name" .. name)
+    local test = Auto:findAccessibilityNodeByText("微信")
+    if (test ~= nil) then
+        Log:d("lua", "找到了")
+    else
+        Log:d("lua", "没找到")
+    end
 end
 
 main()

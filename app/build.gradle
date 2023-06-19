@@ -3,6 +3,8 @@ plugins {
     id 'org.jetbrains.kotlin.android'
 }
 
+
+
 android {
     namespace 'com.tencent.compose1'
     compileSdk 33
@@ -51,6 +53,7 @@ android {
             }
         }
     }
+
 }
 
 dependencies {

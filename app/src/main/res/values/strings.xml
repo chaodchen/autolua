@@ -6,4 +6,7 @@
     <string name="accessibility_service_desc">
         无障碍描述
     </string>
+    <string name="ges_ser_desc">
+        手势服务
+    </string>
 </resources>
